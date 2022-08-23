@@ -1,7 +1,8 @@
 package connectfour
 
-const val MIN_DIM = 5
-const val MAX_DIM = 9
+const val CONNECT_NUM = 4
+const val MIN_DIM = CONNECT_NUM+1
+const val MAX_DIM = CONNECT_NUM*2+1
 
 fun main() {
     val game = ConnectFour()
@@ -11,19 +12,19 @@ fun main() {
 enum class Direction { HORIZONTAL, VERTICAL, DIAGONAL_DOWN_1, DIAGONAL_DOWN_2, DIAGONAL_UP_1, DIAGONAL_UP_2 }
 
 class ConnectFour {
-    private var height = 6
-    private var width = 7
+    private var height = CONNECT_NUM+1
+    private var width = CONNECT_NUM+2
     private var firstPlayer = ""
     private var secondPlayer = ""
-    private val whitespaceRe = Regex("\\s")
+    private var firstPlayerScore = 0
+    private var secondPlayerScore = 0
     private var firstPlayersTurn = true
     private var firstPlayersStarts = true
+    private val whitespaceRe = Regex("\\s")
     private var board: Array<Array<Char>> = arrayOf()
     private var running = false
     private var gamesToRun = -1
     private var currentGame = 1
-    private var firstPlayerScore = 0
-    private var secondPlayerScore = 0
 
     fun startGame() {
         println("Connect Four\n" +
@@ -188,7 +189,7 @@ class ConnectFour {
                     runChar = curV
                     runLength = 1
                 }
-                if (runLength >= 4 && runChar != ' ') {
+                if (runLength >= CONNECT_NUM && runChar != ' ') {
                     running=false
                     println("Player ${if(runChar=='o') firstPlayer else secondPlayer} won")
                     if(runChar=='o') firstPlayerScore += 2
@@ -203,10 +204,10 @@ class ConnectFour {
     private fun checkWinCondition() {
         if(checkForWinInDirection(1, height, width, Direction.HORIZONTAL)) return
         if(checkForWinInDirection(1, width, height, Direction.VERTICAL)) return
-        if(checkForWinInDirection(1, height-3, width, Direction.DIAGONAL_DOWN_1)) return
-        if(checkForWinInDirection(2, width-3, height, Direction.DIAGONAL_DOWN_2)) return
+        if(checkForWinInDirection(1, height-(CONNECT_NUM-1), width, Direction.DIAGONAL_DOWN_1)) return
+        if(checkForWinInDirection(2, width-(CONNECT_NUM-1), height, Direction.DIAGONAL_DOWN_2)) return
         if(checkForWinInDirection(4, height, width, Direction.DIAGONAL_UP_1)) return
-        if(checkForWinInDirection(2, width-3, height, Direction.DIAGONAL_UP_2)) return
+        if(checkForWinInDirection(2, width-(CONNECT_NUM-1), height, Direction.DIAGONAL_UP_2)) return
 
         // draw
         for(i in 1..width)  if(getColumnTopPosition(i) != 0) return
